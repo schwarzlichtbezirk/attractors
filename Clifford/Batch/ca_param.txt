@@ -1,0 +1,25 @@
+Clifford Attractors
+Threads pool size:
+4
+Number of first image and filename mask:
+Number   Mask
+0        img%04i.tga
+Parameters for all images:
+width    height    frames    iters     sensitivity
+1600     1200      10000     10000     0.02
+Color filter, can be one of followed - "color", "gradient", "mask", "mono":
+color
+Hue colors components (for filters):
+red      green     blue
+0.8      0.0       1.0
+0.2      1.0       0.0
+Horizontal Cartesian dimensions (vertical will been cast to image):
+min(X)   max(X)
+-4.0     4.0
+Coefficients ranges for functions:
+   xn+1 = sin(a yn) + c cos(a xn)
+   yn+1 = sin(b xn) + d cos(b yn)
+min(a)   max(a)    min(b)    max(b)    min(c)    max(c)    min(d)    max(d)    
++1.6     +1.3      -0.6      +1.7      -1.2      +0.5      +1.6      +1.4      
++0.6     +1.2      +1.2      +1.8      -0.5      +1.8      +1.6      +1.4      
++0.25    +1.75     -1.12     +1.6      -0.4      +1.8      -1.8      +0.4      
