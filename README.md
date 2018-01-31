@@ -9,8 +9,7 @@ No system dependencies used, STL only based C++11 code. So, others compilators a
 
 ## Buddhabrot ##
 
-<a href="http://images.sevstar.net/images/22946534505656593756.jpg" target="_blank">
-<img src="http://images.sevstar.net/images/22946534505656593756_thumb.png" border="0" alt="Buddhabrot"/></a>
+<a href="http://images.sevstar.net/images/22946534505656593756.jpg" target="_blank"><img src="http://images.sevstar.net/images/22946534505656593756_thumb.png" border="0" alt="Buddhabrot"/></a>  
 
 1) Compile this tool.
 2) Set current directory to destination, where must be placed result TGA-image. For example, execute at console followed commands:
@@ -40,12 +39,9 @@ To produce image above execute `Buddhabrot.x64.exe -sq=2500 -fn buddhasingle.tga
 
 ## Clifford attractors ##
 
-<a href="http://images.sevstar.net/17209669908976374767.jpg" target="_blank">
-<img src="http://images.sevstar.net/images/17209669908976374767_thumb.png" border="0" alt="17209669908976374767.jpg" /></a>
-<a href="http://images.sevstar.net/15444013609743366105.jpg" target="_blank">
-<img src="http://images.sevstar.net/images/15444013609743366105_thumb.png" border="0" alt="15444013609743366105.jpg" /></a>
-<a href="http://images.sevstar.net/96240766713180008594.jpg" target="_blank">
-<img src="http://images.sevstar.net/images/96240766713180008594_thumb.png" border="0" alt="96240766713180008594.jpg" /></a>
+<a href="http://images.sevstar.net/images/17209669908976374767.jpg" target="_blank"><img src="http://images.sevstar.net/images/17209669908976374767_thumb.png" alt="Clifford #1" /></a>
+<a href="http://images.sevstar.net/images/15444013609743366105.jpg" target="_blank"><img src="http://images.sevstar.net/images/15444013609743366105_thumb.png" alt="Clifford #2" /></a>
+<a href="http://images.sevstar.net/images/96240766713180008594.jpg" target="_blank"><img src="http://images.sevstar.net/images/96240766713180008594_thumb.png" alt="Clifford #3" /></a>
 
 There 2 tools for images rendering: batch-mode tool and param-mode tool. Compile them at first, and set current directory as for Buddhabrot.
 Param-mode tool lets place individual parameters at command prompt for each rendering.
