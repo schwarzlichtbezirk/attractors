@@ -15,7 +15,6 @@ namespace attractors {
 			color(*hue)(number), // Hue color generator
 			std::function<void()> notify // notify called with each per cent comlete and breaks if it's return false
 		);
-		void writetga(const wchar_t* filename, const image& img, number sensitivity);
 	}
 }
 

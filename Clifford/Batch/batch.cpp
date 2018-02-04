@@ -11,8 +11,19 @@
 // Threads pool default size
 #define POOL 4
 
+using namespace attractors;
+
+color Hue1(0.8, 0.25, 1.0), Hue2(0.25, 1.0, 0.0);
+
+color gradient(number h) {
+	return color::gradient(h, Hue1, Hue2);
+}
+
+color monochrome(number h) {
+	return color::monochrome(h, Hue1);
+}
+
 int __cdecl wmain(int argc, wchar_t *argv[]) {
-	using namespace attractors;
 	using namespace attractors::clifford;
 
 	// Change params only in this block
@@ -29,7 +40,7 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	static number sensitivity = 0.02;
 	std::vector<geometry> geom;
 
-	color(*fColorFilter)(number) = color::createHueColor;
+	color(*fColorFilter)(number) = color::hue;
 	number minX = -4.0, maxX = 4.0;
 
 	std::wifstream is(argc > 1 ? argv[1] : L"ca_param.txt");
@@ -61,20 +72,20 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	is >> width >> height;
 	is >> frames >> iters >> sensitivity;
 	is.getline(line, _countof(line));
-	is.getline(line, _countof(line)); // color filter, can be one of followed - "color", "gradient", "mask", "mono":
+	is.getline(line, _countof(line)); // Color filter, can be one of followed - "hue", "rainbow", "gradient", "mono":
 	std::wstring colfilter;
 	is >> colfilter;
-	if (colfilter == L"color") fColorFilter = color::createHueColor;
-	else if (colfilter == L"gradient") fColorFilter = color::createHueGradient;
-	else if (colfilter == L"mask") fColorFilter = color::createHueMask;
-	else if (colfilter == L"mono") fColorFilter = color::createHueMono;
+	if (colfilter == L"hue") fColorFilter = color::hue;
+	else if (colfilter == L"rainbow") fColorFilter = color::rainbow;
+	else if (colfilter == L"gradient") fColorFilter = gradient;
+	else if (colfilter == L"mono") fColorFilter = monochrome;
 	is.getline(line, _countof(line));
-	is.getline(line, _countof(line)); // Hue colors components (for filters):
+	is.getline(line, _countof(line)); // Gradient colors components (for filters):
 	is.getline(line, _countof(line)); // red      green     blue
-	is >> color::Hue1.r >> color::Hue1.g >> color::Hue1.b;
-	color::Hue1.normalize();
-	is >> color::Hue2.r >> color::Hue2.g >> color::Hue2.b;
-	color::Hue2.normalize();
+	is >> Hue1.r >> Hue1.g >> Hue1.b;
+	Hue1.normalize();
+	is >> Hue2.r >> Hue2.g >> Hue2.b;
+	Hue2.normalize();
 	is.getline(line, _countof(line));
 	is.getline(line, _countof(line)); // Horizontal Cartesian dimensions (vertical will been cast to image):
 	is.getline(line, _countof(line)); // min(X)   max(X)
@@ -165,7 +176,7 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 
 		// Save image
 		std::wcout << L"writing...";
-		writetga(filename, img, sensitivity);
+		img.writetga(filename, sensitivity);
 		std::wcout << L"\r" << filename << L"      " << std::endl;
 
 		nImg++;

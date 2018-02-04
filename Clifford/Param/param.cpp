@@ -78,7 +78,7 @@ int __cdecl wmain(void) {
 	for (int quote = 0; quote < pool; quote++) {
 		busynum++;
 		job[quote] = std::thread([&, quote]() {
-			render(quote, pool, g, img, color::createHueColor, [&]() {
+			render(quote, pool, g, img, color::hue, [&]() {
 				auto pct = std::chrono::high_resolution_clock::now();
 				auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(pct - pc1).count() / 1e9;
 				percent++;
@@ -100,7 +100,7 @@ int __cdecl wmain(void) {
 
 	// Save image
 	std::wcout << L"writing...";
-	writetga(filename, img, sensitivity);
+	img.writetga(filename, sensitivity);
 	std::wcout << L"\r" << filename << L"      " << std::endl;
 
 	// wait until key pressed

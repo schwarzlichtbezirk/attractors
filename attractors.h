@@ -14,11 +14,10 @@ namespace attractors {
 	class color {
 	public:
 
-		static color createHueColor(number h);
-		static color createHueGradient(number h);
-		static color createHueMask(number h);
-		static color createHueMono(number h);
-		static color createGradient(number h, const color& hue1, const color& hue2);
+		static color hue(number h);
+		static color rainbow(number h);
+		static color monochrome(number h, const color& hue);
+		static color gradient(number h, const color& hue1, const color& hue2);
 
 		color(const number &red = 0, const number &green = 0, const number &blue = 0) : r(red), g(green), b(blue) {}
 
@@ -30,8 +29,6 @@ namespace attractors {
 	public:
 
 		number r, g, b;
-
-		static color Hue1, Hue2;
 	};
 
 	struct image {
@@ -43,6 +40,7 @@ namespace attractors {
 		const color* data() const { return bitmap.data(); }
 		void resize(int w, int h);
 		void clear(); // clear content
+		void writetga(const wchar_t* filename, number sensitivity); // can be opened with gimp, PhotoShop, etc.
 	};
 
 	// TGA saving

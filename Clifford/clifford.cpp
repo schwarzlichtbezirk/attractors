@@ -1,8 +1,6 @@
 
 #include "stdafx.h"
 
-#include <fstream>
-
 #include "../attractors.h"
 #include "clifford.h"
 
@@ -17,10 +15,10 @@ void clifford::render(
 	std::function<void()> notify) {
 
 	color* bmp = img.data();
-	int w = img.width, h = img.height;
+	int nx = img.width, ny = img.height;
 	int fpc = g.frames / 100;
 
-	number dX = w / (g.maxX - g.minX), dY = h / (g.maxY - g.minY);
+	number dX = nx / (g.maxX - g.minX), dY = ny / (g.maxY - g.minY);
 
 	int i1 = quote * g.frames / pool, i2 = (quote + 1) * g.frames / pool;
 	for (int i = i1; i < i2; i++) {
@@ -46,9 +44,9 @@ void clifford::render(
 
 			int xi = static_cast<int>((x - g.minX) * dX);
 			int yi = static_cast<int>((y - g.minY) * dY);
-			if (xi >= 0 && xi < w && yi >= 0 && yi < h) {
+			if (xi >= 0 && xi < nx && yi >= 0 && yi < ny) {
 				// there is no significant threads access to one data point at one time
-				bmp[xi + yi * w] += curcol;
+				bmp[xi + yi * nx] += curcol;
 			}
 		}
 
@@ -56,21 +54,6 @@ void clifford::render(
 			notify();
 		}
 	}
-}
-
-void clifford::writetga(const wchar_t* filename, const image& img, number sensitivity) {
-	std::ofstream os(filename, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
-	tgaheader(os, img.width, img.height, "Clifford attractors");
-
-	// Raw uncompressed bytes
-	for (const auto& c : img.bitmap) {
-		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.b)) * 255.0));
-		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.g)) * 255.0));
-		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.r)) * 255.0));
-	}
-
-	tgafooter(os);
-	os.close();
 }
 
 // The End.

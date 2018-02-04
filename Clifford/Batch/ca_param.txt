@@ -7,9 +7,9 @@ Number   Mask
 Parameters for all images:
 width    height    frames    iters     sensitivity
 1600     1200      10000     10000     0.02
-Color filter, can be one of followed - "color", "gradient", "mask", "mono":
-color
-Hue colors components (for filters):
+Color filter, can be one of followed - "hue", "rainbow", "gradient", "mono":
+hue
+Gradient colors components (for filters):
 red      green     blue
 0.8      0.0       1.0
 0.2      1.0       0.0

@@ -2,6 +2,7 @@
 #include "stdafx.h"
 
 #include <algorithm>
+#include <fstream>
 
 #include "attractors.h"
 
@@ -11,9 +12,7 @@ using namespace attractors;
 // float color //
 /////////////////
 
-color color::Hue1(0.8, 0.25, 1.0), color::Hue2(0.25, 1.0, 0.0);
-
-color color::createHueColor(number h) {
+color color::hue(number h) {
 	h *= 6.0;
 	int hi = static_cast<int>(h);
 	number hf = h - hi;
@@ -36,45 +35,41 @@ color color::createHueColor(number h) {
 	return color();
 }
 
-color color::createHueGradient(number h) {
-	h *= 6.0;
-	int hi = static_cast<int>(h);
-	number hf = h - hi;
-	return createGradient(hf, Hue1, Hue2);
-}
-
-color color::createHueMask(number h) {
+color color::rainbow(number h) {
 	h *= 6.0;
 	int hi = static_cast<int>(h);
 	number hf = h - hi;
 
 	switch (hi % 6) {
 	case 0:
-		return color(1.0*Hue1.r, hf*Hue1.g, 0.0);
+		return color(0.0, hf, 1.0);
 	case 1:
-		return color((1.0 - hf)*Hue1.r, 1.0*Hue1.g, 0.0);
+		return color(0.0, 1.0, 1.0 - hf);
 	case 2:
-		return color(0.0, 1.0*Hue1.g, hf*Hue1.b);
+		return color(hf, 1.0, 0);
 	case 3:
-		return color(0.0, (1.0 - hf)*Hue1.g, 1.0*Hue1.b);
+		return color(1.0, 1.0 - hf, 0);
 	case 4:
-		return color(hf*Hue1.r, 0.0, 1.0*Hue1.b);
+		return color(1.0, 0.0, hf);
 	case 5:
-		return color(1.0*Hue1.r, 0.0, (1.0 - hf)*Hue1.b);
+		return color(1.0 - hf, 0.0, 1.0);
 	}
 
 	return color();
 }
 
-color color::createGradient(number h, const color& hue1, const color& hue2) {
-	number d = 1.0 - h;
-	return color(hue1.r*h + hue2.r*d, hue1.g*h + hue2.g*d, hue1.b*h + hue2.b*d);
+color color::gradient(number h, const color& hue1, const color& hue2) {
+	h *= 6.0;
+	int hi = static_cast<int>(h);
+	number hf = h - hi;
+	number df = 1. - h;
+	return color(hue1.r*hf + hue2.r*df, hue1.g*hf + hue2.g*df, hue1.b*hf + hue2.b*df);
 }
 
-color color::createHueMono(number h) {
+color color::monochrome(number h, const color& hue) {
 	h *= 6.0;
 	number hf = h - static_cast<int>(h);
-	return color(hf*Hue1.r, hf*Hue1.g, hf*Hue1.b);
+	return color(hf*hue.r, hf*hue.g, hf*hue.b);
 }
 
 color& color::operator+=(const color &rhs) {
@@ -110,6 +105,21 @@ void image::resize(int w, int h) {
 
 void image::clear() {
 	memset(bitmap.data(), 0, bitmap.size() * sizeof(color));
+}
+
+void image::writetga(const wchar_t* filename, number sensitivity) {
+	std::ofstream os(filename, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
+	tgaheader(os, width, height, "Clifford attractors");
+
+	// Raw uncompressed bytes
+	for (const auto& c : bitmap) {
+		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.b)) * 255.0));
+		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.g)) * 255.0));
+		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.r)) * 255.0));
+	}
+
+	tgafooter(os);
+	os.close();
 }
 
 ////////////////

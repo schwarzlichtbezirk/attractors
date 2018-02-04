@@ -21,9 +21,6 @@
 // Number of iterations, multiples of 1 million
 #define TMAX 50
 
-// Color algorithm
-#define COLORALG 2
-
 // Threads pool default size
 #define POOL 4
 
@@ -34,23 +31,15 @@ typedef struct {
 } XY;
 
 static int nx = NX, ny = NY;
+static number sensitivity = 0.02;
 static int nmax = NMAX, tmax = TMAX;
 static int pool = 0; // setup it later
 
 std::atomic_ulong numdiscard = 0;
 std::atomic_ullong nsum = 0;
 
-#if COLORALG == 2
-// Gradient colors
-color hue1(1.0, 1.0, 0.3), hue2(0, 0, 0.5);
-#endif
-
 // Output TGA-image file name
 const wchar_t* filename = L"buddhabrot.tga";
-
-// Prototypes
-void writetga(const wchar_t*, const planecolor*, int, int);
-void bailout(double, double, int&, XY*);
 
 struct {
 	const wchar_t* id;
@@ -118,6 +107,76 @@ void cmdlinehelp() {
 	}
 }
 
+void render(
+	int quote, int pool,
+	image& img,
+	color(*hue)(number),
+	std::function<void()> notify) {
+
+	int i, j, n, ix, iy;
+	double x, y, x0, y0, xnew, ynew;
+
+	// Coordinates sequence
+	std::vector<XY> xyseq(nmax);
+	XY* seq = xyseq.data(); // for fast access
+
+	color* bmp = img.data(); // for fast access
+	int nx = img.width, ny = img.height;
+	int frames = 1000000 * tmax;
+	int fpc = frames / 100;
+
+	std::vector<color> ct(nmax);
+	color* ctp = ct.data();
+	for (int i = 0; i < ct.size(); i++) {
+		ctp[i] = hue((double)i / nmax);
+	}
+
+	// Make unique random sequence
+	std::mt19937_64 prng(std::chrono::high_resolution_clock::now().time_since_epoch().count() + quote);
+	std::uniform_real_distribution<double> distribution(0.0, 1.0);
+
+	// Iterate
+	int i1 = quote * frames / pool, i2 = (quote + 1) * frames / pool;
+	for (i = i1; i < i2; i++) {
+
+		// Choose a random point in same range
+		x0 = 6 * distribution(prng) - 3;
+		y0 = 6 * distribution(prng) - 3;
+
+		// Iterate the Mandelbrot and sets n to number of iterations before diverges from a starting point
+		x = 0, y = 0;
+		for (n = 0; n < nmax; n++) {
+			xnew = x * x - y * y + x0;
+			ynew = 2 * x * y + y0;
+			seq[n].x = xnew;
+			seq[n].y = ynew;
+			// Determine state of this point, draw if it escapes
+			if (xnew * xnew + ynew * ynew > 6.05) {
+				for (j = 0; j < n; j++) {
+					iy = (int)(ny * (0.5 - 1.0 / 3 * seq[j].x - 0.3*0.5));
+					ix = (int)(nx * (0.5 + 1.0 / 3 * seq[j].y));
+					if (ix >= 0 && iy >= 0 && ix < nx && iy < ny) {
+						bmp[ix + iy * nx] += ctp[j];
+					}
+				}
+				nsum.fetch_add(n);
+				break;
+			}
+			x = xnew;
+			y = ynew;
+		}
+		if (n == nmax) {
+			numdiscard++;
+		}
+
+		if (!(i % fpc)) {
+			notify();
+		}
+
+	}
+
+}
+
 int __cdecl wmain(int argc, wchar_t *argv[]) {
 	// process command line parameters
 	for (int param = 1; param < argc; param++) {
@@ -168,12 +227,10 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	}
 
 	// The density plot
-	std::vector<planecolor> image(nx*ny); // allocate space for the primary image
-	planecolor* imptr = image.data(); // for fast access
-	memset(imptr, 0, image.size() * sizeof(planecolor)); // clear to black
+	image img(nx, ny);
+	img.clear();
 
 	int frames = 1000000 * tmax;
-	int fpc = frames / 100;
 
 	std::atomic_int percent = -pool; // skip calculation on each thread start
 	std::atomic_int busynum = 0;
@@ -186,61 +243,14 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	for (int quote = 0; quote < pool; quote++) {
 		busynum++;
 		job[quote] = std::thread([&, quote]() {
-			int i, j, n, ix, iy;
-			double x, y, x0, y0, xnew, ynew;
-
-			// Coordinates sequence
-			std::vector<XY> xyseq(nmax);
-			XY* seq = xyseq.data(); // for fast access
-
-			// Make unique random sequence
-			std::mt19937_64 prng(pc1.time_since_epoch().count() + quote);
-			std::uniform_real_distribution<double> distribution(0.0, 1.0);
-
-			// Iterate
-			int i1 = quote * frames / pool, i2 = (quote + 1) * frames / pool;
-			for (i = i1; i < i2; i++) {
-
-				// Choose a random point in same range
-				x0 = 6 * distribution(prng) - 3;
-				y0 = 6 * distribution(prng) - 3;
-
-				// Iterate the Mandelbrot and sets n to number of iterations before diverges from a starting point
-				x = 0, y = 0;
-				for (n = 0; n < nmax; n++) {
-					xnew = x * x - y * y + x0;
-					ynew = 2 * x * y + y0;
-					seq[n].x = xnew;
-					seq[n].y = ynew;
-					// Determine state of this point, draw if it escapes
-					if (xnew * xnew + ynew * ynew > 6.05) {
-						for (j = 0; j < n; j++) {
-							iy = (int)(ny * (0.5 - 1.0 / 3 * seq[j].x - 0.3*0.5));
-							ix = (int)(nx * (0.5 + 1.0 / 3 * seq[j].y));
-							if (ix >= 0 && iy >= 0 && ix < nx && iy < ny) {
-								(std::atomic_short*)imptr[iy * nx + ix]++;
-							}
-						}
-						nsum.fetch_add(n);
-						break;
-					}
-					x = xnew;
-					y = ynew;
-				}
-				if (n == nmax) {
-					numdiscard++;
-				}
-
-				if (!(i % fpc)) {
-					auto pct = std::chrono::high_resolution_clock::now();
-					auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(pct - pc1).count() / 1e9;
-					percent++;
-					mtxcout.lock(); // exclusive access to std::wcout
-					std::wcout << L"\r" << percent << L"%, remains " << (percent > 0 ? (int)(dur * (100 - percent) / percent) : 0) << L"s   ";
-					mtxcout.unlock();
-				}
-
-			}
+			render(quote, pool, img, color::rainbow, [&]() {
+				auto pct = std::chrono::high_resolution_clock::now();
+				auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(pct - pc1).count() / 1e9;
+				percent++;
+				mtxcout.lock(); // exclusive access to std::wcout
+				std::wcout << L"\r" << percent << L"%, remains " << (percent > 0 ? (int)(dur * (100 - percent) / percent) : 0) << L"s   ";
+				mtxcout.unlock();
+			});
 			busynum--;
 			cv.notify_one();
 		});
@@ -252,73 +262,16 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	}
 	auto pc2 = std::chrono::high_resolution_clock::now();
 	std::wcout << L"\r" << std::chrono::duration_cast<std::chrono::nanoseconds>(pc2 - pc1).count() / 1e9 << L"s            " << std::endl;
-	std::wcout << L"discard points: " << (numdiscard / tmax / 1e4) << L"%" << std::endl;
-	std::wcout << L"average bailout: " << (nsum / (tmax * 1e6 - numdiscard)) << std::endl;
+	std::wcout << L"discard points: " << (100. * numdiscard / frames) << L"%" << std::endl;
+	std::wcout << L"average bailout: " << ((double)nsum / (frames - numdiscard)) << std::endl;
 	std::wcout << L"total iterations: " << (nsum / 1e6) << L"M" << std::endl;
 
-	// Save the result 
-	writetga(filename, imptr, nx, ny);
+	// Save image
+	std::wcout << L"writing...";
+	img.writetga(filename, sensitivity);
+	std::wcout << L"\r" << filename << L"      " << std::endl;
 
 	return 0;
-}
-
-/*
-   Write the buddha image to a minimal TGA file.
-   Can be opened with gimp, PhotoShop, etc.
-*/
-void writetga(const wchar_t* filename, const planecolor* image, int width, int height) {
-	// Find the largest density value
-	planecolor biggest = 0, smallest = (planecolor)-1;
-	for (int i = 0; i < width*height; i++) {
-		biggest = std::max<planecolor>(biggest, image[i]);
-		smallest = std::min<planecolor>(smallest, image[i]);
-	}
-
-	// Write the image
-	std::wcout << L"density value range: " << smallest << L" to " << biggest << std::endl;
-	std::wcout << L"writing...";
-
-	std::ofstream os(filename, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
-	tgaheader(os, width, height, "Buddhabrot attractor");
-
-	// Raw uncompressed bytes
-	double ramp;
-	for (int i = 0; i < width*height; i++) {
-		ramp = (double)(image[i] - smallest) / (biggest - smallest);
-		ramp = pow(3.0*ramp, 1.0 / 3);
-		if (ramp > 1) ramp = 1;
-#if COLORALG == 1
-		const double bound = 0.4;
-		ramp = (double)(image[i] - smallest) / (biggest - smallest);
-		ramp = sqrt(3.0*ramp);
-		if (ramp > 1) ramp = 1;
-		if (ramp > bound) {
-			ramp = (ramp - bound) / (1.0 - bound);
-			os.put((byte)(0));
-			os.put((byte)(ramp * 255));
-			os.put((byte)(ramp*255));
-		} else {
-			ramp = (bound - ramp) / bound;
-			os.put((byte)(ramp * 255));
-			os.put((byte)(0));
-			os.put((byte)(ramp*255));
-		}
-#elif COLORALG == 2
-		auto c = color::createGradient(ramp, hue1, hue2);
-		os.put((byte)(c.b * 255));
-		os.put((byte)(c.g * 255));
-		os.put((byte)(c.r * 255));
-#else
-		os.put((byte)(0));
-		os.put((byte)(ramp * 255));
-		os.put((byte)(ramp * 255));
-#endif
-	}
-
-	tgafooter(os);
-	os.close();
-
-	std::wcout << L"\r" << filename << L"      " << std::endl;
 }
 
 // The End.
