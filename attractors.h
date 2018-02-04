@@ -33,6 +33,17 @@ namespace attractors {
 		static color Hue1, Hue2;
 	};
 
+	struct image {
+		int width, height;
+		std::vector<color> bitmap;
+
+		image(int w, int h);
+		color* data() { return bitmap.data(); }
+		const color* data() const { return bitmap.data(); }
+		void resize(int w, int h);
+		void clear(); // clear content
+	};
+
 	// TGA saving
 	void tgaheader(std::ostream& os, int wdh, int hgt, const char* id = "");
 	void tgafooter(std::ostream& os);

@@ -94,6 +94,24 @@ void color::normalize() {
 	else r = g = b = 1.0;
 }
 
+/////////////////
+// image class //
+/////////////////
+
+image::image(int w, int h) :
+	width(w), height(h),
+	bitmap(w*h) { // allocate space for the primary image
+}
+
+void image::resize(int w, int h) {
+	width = w, height = h;
+	bitmap.resize(w*h);
+}
+
+void image::clear() {
+	memset(bitmap.data(), 0, bitmap.size() * sizeof(color));
+}
+
 ////////////////
 // TGA saving //
 ////////////////

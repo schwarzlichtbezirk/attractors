@@ -122,11 +122,10 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 #pragma endregion
 
 	// The density plot
-	std::vector<color> image(width*height); // allocate space for the primary image
+	image img(width, height); // allocate space for the primary image
 
 	for (const auto& g : geom) {
-		// Clear content
-		memset(image.data(), 0, image.size() * sizeof(color));
+		img.clear();
 
 		std::atomic_int percent = -pool; // skip calculation on each thread start
 		std::atomic_int busynum = 0;
@@ -140,7 +139,7 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 		for (int quote = 0; quote < pool; quote++) {
 			busynum++;
 			job[quote] = std::thread([&]() {
-				render(quote, pool, g, image.data(), width, height, fColorFilter, [&]() {
+				render(quote, pool, g, img, fColorFilter, [&]() {
 					auto pct = std::chrono::high_resolution_clock::now();
 					auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(pct - pc1).count() / 1e9;
 					percent++;
@@ -166,7 +165,7 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 
 		// Save image
 		std::wcout << L"writing...";
-		writetga(filename, image.data(), width, height, sensitivity);
+		writetga(filename, img, sensitivity);
 		std::wcout << L"\r" << filename << L"      " << std::endl;
 
 		nImg++;

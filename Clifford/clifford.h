@@ -11,12 +11,11 @@ namespace attractors {
 		void render(
 			int quote, int pool,
 			const geometry& g, // geometry equation parameters
-			color* image, // image bitmap
-			int width, int height, // image dimension
+			image& img, // plotting image
 			color(*hue)(number), // Hue color generator
 			std::function<void()> notify // notify called with each per cent comlete and breaks if it's return false
 		);
-		void writetga(const wchar_t* filename, const color* image, int width, int height, number sensitivity);
+		void writetga(const wchar_t* filename, const image& img, number sensitivity);
 	}
 }
 

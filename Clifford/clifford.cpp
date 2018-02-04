@@ -12,12 +12,14 @@ using namespace attractors::clifford;
 void clifford::render(
 	int quote, int pool,
 	const geometry& g,
-	color* image,
-	int width, int height,
+	image& img,
 	color(*hue)(number),
 	std::function<void()> notify) {
 
-	number dX = width / (g.maxX - g.minX), dY = height / (g.maxY - g.minY);
+	color* bmp = img.data();
+	int w = img.width, h = img.height;
+
+	number dX = w / (g.maxX - g.minX), dY = h / (g.maxY - g.minY);
 
 	int i1 = quote * g.frames / pool, i2 = (quote + 1) * g.frames / pool;
 	for (int i = i1; i < i2; i++) {
@@ -43,9 +45,9 @@ void clifford::render(
 
 			int xi = static_cast<int>((x - g.minX) * dX);
 			int yi = static_cast<int>((y - g.minY) * dY);
-			if (xi >= 0 && xi < width && yi >= 0 && yi < height) {
+			if (xi >= 0 && xi < w && yi >= 0 && yi < h) {
 				// there is no significant threads access to one data point at one time
-				image[xi + (height - yi) * width] += curcol;
+				bmp[xi + yi * w] += curcol;
 			}
 		}
 		if (!(i % (g.frames / 100))) {
@@ -54,13 +56,12 @@ void clifford::render(
 	}
 }
 
-void clifford::writetga(const wchar_t* filename, const color* image, int width, int height, number sensitivity) {
+void clifford::writetga(const wchar_t* filename, const image& img, number sensitivity) {
 	std::ofstream os(filename, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
-	tgaheader(os, width, height, "Clifford attractors");
+	tgaheader(os, img.width, img.height, "Clifford attractors");
 
 	// Raw uncompressed bytes
-	for (int i = 0; i < width*height; i++) {
-		const auto& c = image[i];
+	for (const auto& c : img.bitmap) {
 		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.b)) * 255.0));
 		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.g)) * 255.0));
 		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.r)) * 255.0));

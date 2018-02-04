@@ -42,6 +42,7 @@ To produce image above execute `Buddhabrot.x64.exe -sq=2500 -fn buddhasingle.tga
 <a href="http://images.sevstar.net/images/17209669908976374767.jpg" target="_blank"><img src="http://images.sevstar.net/images/17209669908976374767_thumb.png" alt="Clifford #1" /></a>
 <a href="http://images.sevstar.net/images/15444013609743366105.jpg" target="_blank"><img src="http://images.sevstar.net/images/15444013609743366105_thumb.png" alt="Clifford #2" /></a>
 <a href="http://images.sevstar.net/images/96240766713180008594.jpg" target="_blank"><img src="http://images.sevstar.net/images/96240766713180008594_thumb.png" alt="Clifford #3" /></a>
+<a href="http://images.sevstar.net/images/67101706209135196956.jpg" target="_blank"><img src="http://images.sevstar.net/images/67101706209135196956_thumb.png" alt="Clifford #4" /></a>
 
 There 2 tools for images rendering: batch-mode tool and param-mode tool. Compile them at first, and set current directory as for Buddhabrot.
 Param-mode tool lets place individual parameters at command prompt for each rendering.

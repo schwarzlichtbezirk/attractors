@@ -1,0 +1,6 @@
+.svn
+.vs
+ipch
+obj
+bin
+*.db
