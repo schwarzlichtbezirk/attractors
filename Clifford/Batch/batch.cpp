@@ -138,7 +138,7 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 		auto pc1 = std::chrono::high_resolution_clock::now();
 		for (int quote = 0; quote < pool; quote++) {
 			busynum++;
-			job[quote] = std::thread([&]() {
+			job[quote] = std::thread([&, quote]() {
 				render(quote, pool, g, img, fColorFilter, [&]() {
 					auto pct = std::chrono::high_resolution_clock::now();
 					auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(pct - pc1).count() / 1e9;

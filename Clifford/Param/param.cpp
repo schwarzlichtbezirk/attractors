@@ -77,7 +77,7 @@ int __cdecl wmain(void) {
 	auto pc1 = std::chrono::high_resolution_clock::now();
 	for (int quote = 0; quote < pool; quote++) {
 		busynum++;
-		job[quote] = std::thread([&]() {
+		job[quote] = std::thread([&, quote]() {
 			render(quote, pool, g, img, color::createHueColor, [&]() {
 				auto pct = std::chrono::high_resolution_clock::now();
 				auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(pct - pc1).count() / 1e9;

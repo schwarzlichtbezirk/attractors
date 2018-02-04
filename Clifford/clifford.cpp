@@ -18,6 +18,7 @@ void clifford::render(
 
 	color* bmp = img.data();
 	int w = img.width, h = img.height;
+	int fpc = g.frames / 100;
 
 	number dX = w / (g.maxX - g.minX), dY = h / (g.maxY - g.minY);
 
@@ -50,7 +51,8 @@ void clifford::render(
 				bmp[xi + yi * w] += curcol;
 			}
 		}
-		if (!(i % (g.frames / 100))) {
+
+		if (!(i % fpc)) {
 			notify();
 		}
 	}

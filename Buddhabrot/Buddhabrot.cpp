@@ -50,7 +50,7 @@ const wchar_t* filename = L"buddhabrot.tga";
 
 // Prototypes
 void writetga(const wchar_t*, const planecolor*, int, int);
-void bailout(double, double, int *, XY *);
+void bailout(double, double, int&, XY*);
 
 struct {
 	const wchar_t* id;
@@ -172,6 +172,9 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	planecolor* imptr = image.data(); // for fast access
 	memset(imptr, 0, image.size() * sizeof(planecolor)); // clear to black
 
+	int frames = 1000000 * tmax;
+	int fpc = frames / 100;
+
 	std::atomic_int percent = -pool; // skip calculation on each thread start
 	std::atomic_int busynum = 0;
 	std::mutex mtxcout;
@@ -182,39 +185,53 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	auto pc1 = std::chrono::high_resolution_clock::now();
 	for (int quote = 0; quote < pool; quote++) {
 		busynum++;
-		job[quote] = std::thread([&]() {
-			int i, n, ix, iy;
-			int t, tt;
-			double x, y;
+		job[quote] = std::thread([&, quote]() {
+			int i, j, n, ix, iy;
+			double x, y, x0, y0, xnew, ynew;
 
 			// Coordinates sequence
 			std::vector<XY> xyseq(nmax);
-			XY* seqptr = xyseq.data(); // for fast access
+			XY* seq = xyseq.data(); // for fast access
 
 			// Make unique random sequence
 			std::mt19937_64 prng(pc1.time_since_epoch().count() + quote);
 			std::uniform_real_distribution<double> distribution(0.0, 1.0);
 
 			// Iterate
-			for (tt = 0; tt < 1000000 / pool; tt++) {
-				for (t = 0; t < tmax; t++) {
+			int i1 = quote * frames / pool, i2 = (quote + 1) * frames / pool;
+			for (i = i1; i < i2; i++) {
 
-					// Choose a random point in same range
-					x = 6 * distribution(prng) - 3;
-					y = 6 * distribution(prng) - 3;
+				// Choose a random point in same range
+				x0 = 6 * distribution(prng) - 3;
+				y0 = 6 * distribution(prng) - 3;
 
-					// Determine state of this point, draw if it escapes 
-					bailout(x, y, &n, seqptr);
-					for (i = 0; i < n; i++) {
-						iy = (int)(ny * (0.5 - 1.0 / 3 * seqptr[i].x - 0.3*0.5));
-						ix = (int)(nx * (0.5 + 1.0 / 3 * seqptr[i].y));
-						if (ix >= 0 && iy >= 0 && ix < nx && iy < ny) {
-							(std::atomic_short*)imptr[iy * nx + ix]++;
+				// Iterate the Mandelbrot and sets n to number of iterations before diverges from a starting point
+				x = 0, y = 0;
+				for (n = 0; n < nmax; n++) {
+					xnew = x * x - y * y + x0;
+					ynew = 2 * x * y + y0;
+					seq[n].x = xnew;
+					seq[n].y = ynew;
+					// Determine state of this point, draw if it escapes
+					if (xnew * xnew + ynew * ynew > 6.05) {
+						for (j = 0; j < n; j++) {
+							iy = (int)(ny * (0.5 - 1.0 / 3 * seq[j].x - 0.3*0.5));
+							ix = (int)(nx * (0.5 + 1.0 / 3 * seq[j].y));
+							if (ix >= 0 && iy >= 0 && ix < nx && iy < ny) {
+								(std::atomic_short*)imptr[iy * nx + ix]++;
+							}
 						}
+						nsum.fetch_add(n);
+						break;
 					}
+					x = xnew;
+					y = ynew;
+				}
+				if (n == nmax) {
+					numdiscard++;
+				}
 
-				} // t
-				if (!(tt % (1000000 / 100))) {
+				if (!(i % fpc)) {
 					auto pct = std::chrono::high_resolution_clock::now();
 					auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(pct - pc1).count() / 1e9;
 					percent++;
@@ -222,7 +239,8 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 					std::wcout << L"\r" << percent << L"%, remains " << (percent > 0 ? (int)(dur * (100 - percent) / percent) : 0) << L"s   ";
 					mtxcout.unlock();
 				}
-			} // tt
+
+			}
 			busynum--;
 			cv.notify_one();
 		});
@@ -242,28 +260,6 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	writetga(filename, imptr, nx, ny);
 
 	return 0;
-}
-
-// Iterate the Mandelbrot and sets n to number of iterations before diverges from a starting point
-void bailout(double x0, double y0, int *n, XY *seq) {
-	double x = 0, y = 0, xnew, ynew;
-
-	*n = 0;
-	for (int i = 0; i < nmax; i++) {
-		xnew = x * x - y * y + x0;
-		ynew = 2 * x * y + y0;
-		seq[i].x = xnew;
-		seq[i].y = ynew;
-		if (xnew * xnew + ynew * ynew > 6.05) {
-			*n = i;
-			nsum.fetch_add(i);
-			return;
-		}
-		x = xnew;
-		y = ynew;
-	}
-
-	numdiscard++;
 }
 
 /*

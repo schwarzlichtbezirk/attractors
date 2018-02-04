@@ -7,6 +7,7 @@ namespace attractors {
 	typedef unsigned __int8  byte;
 	typedef unsigned __int16 word;
 	typedef unsigned __int32 uint;
+	typedef unsigned __int64 huge;
 	typedef double number;
 	typedef unsigned __int16 planecolor;
 
