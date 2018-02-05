@@ -121,7 +121,7 @@ void render(
 	XY* seq = xyseq.data(); // for fast access
 
 	color* bmp = img.data(); // for fast access
-	int nx = img.width, ny = img.height;
+	int nx = img.nx, ny = img.ny;
 	int frames = 1000000 * tmax;
 	int fpc = frames / 100;
 

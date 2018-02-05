@@ -15,7 +15,7 @@ void clifford::render(
 	std::function<void()> notify) {
 
 	color* bmp = img.data();
-	int nx = img.width, ny = img.height;
+	int nx = img.nx, ny = img.ny;
 	int fpc = g.frames / 100;
 
 	number dX = nx / (g.maxX - g.minX), dY = ny / (g.maxY - g.minY);

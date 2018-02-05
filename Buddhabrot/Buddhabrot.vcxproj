@@ -75,13 +75,13 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration).$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration).$(PlatformShortName)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)_dev.$(PlatformShortName)</TargetName>
+    <TargetName>$(ProjectName).$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration).$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration).$(PlatformShortName)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName)_dev.$(PlatformShortName)</TargetName>
+    <TargetName>$(ProjectName).$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>

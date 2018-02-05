@@ -1,3 +1,8 @@
+#ifndef _CLIFFORD_
+#define _CLIFFORD_
+
+//-----------------------------------------------------------------------------
+
 #include <functional>
 
 namespace attractors {
@@ -17,5 +22,9 @@ namespace attractors {
 		);
 	}
 }
+
+//-----------------------------------------------------------------------------
+
+#endif // _CLIFFORD_
 
 // The End.

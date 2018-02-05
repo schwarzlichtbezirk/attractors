@@ -94,13 +94,13 @@ void color::normalize() {
 /////////////////
 
 image::image(int w, int h) :
-	width(w), height(h),
+	nx(w), ny(h),
 	bitmap(w*h) { // allocate space for the primary image
 }
 
 void image::resize(int w, int h) {
-	width = w, height = h;
-	bitmap.resize(w*h);
+	nx = w, ny = h;
+	update();
 }
 
 void image::clear() {
@@ -109,7 +109,7 @@ void image::clear() {
 
 void image::writetga(const wchar_t* filename, number sensitivity) {
 	std::ofstream os(filename, std::ios_base::out | std::ios_base::binary | std::ios_base::trunc);
-	tgaheader(os, width, height, "Clifford attractors");
+	tgaheader(os, nx, ny, "Clifford attractors");
 
 	// Raw uncompressed bytes
 	for (const auto& c : bitmap) {
@@ -120,6 +120,10 @@ void image::writetga(const wchar_t* filename, number sensitivity) {
 
 	tgafooter(os);
 	os.close();
+}
+
+void image::update() {
+	bitmap.resize(nx*ny);
 }
 
 ////////////////

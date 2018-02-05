@@ -1,3 +1,8 @@
+#ifndef _ATTRACTORS_
+#define _ATTRACTORS_
+
+//-----------------------------------------------------------------------------
+
 #pragma once
 
 #include <ostream>
@@ -31,16 +36,25 @@ namespace attractors {
 		number r, g, b;
 	};
 
-	struct image {
-		int width, height;
-		std::vector<color> bitmap;
+	class image {
+	public:
 
+		image() = default;
 		image(int w, int h);
 		color* data() { return bitmap.data(); }
 		const color* data() const { return bitmap.data(); }
 		void resize(int w, int h);
 		void clear(); // clear content
 		void writetga(const wchar_t* filename, number sensitivity); // can be opened with gimp, PhotoShop, etc.
+
+		int nx, ny;
+
+	protected:
+
+		void update();
+
+	private:
+		std::vector<color> bitmap;
 	};
 
 	// TGA saving
@@ -48,5 +62,9 @@ namespace attractors {
 	void tgafooter(std::ostream& os);
 
 }
+
+//-----------------------------------------------------------------------------
+
+#endif // _ATTRACTORS_
 
 // The End.
