@@ -1,6 +1,5 @@
-#pragma once
-#ifndef __clifford_h__
-#define __clifford_h__
+#ifndef __buddhabrot_h__
+#define __buddhabrot_h__
 
 //-----------------------------------------------------------------------------
 
@@ -8,10 +7,11 @@
 #include "../attractors.h"
 
 namespace attractors {
-	struct clifford {
-		int frames, iters, skip;
-		number minX, minY, maxX, maxY;
-		number minA, maxA, minB, maxB, minC, maxC, minD, maxD;
+	struct buddhabrot {
+		int nmax, tmax;
+
+		static std::atomic_ulong numdiscard;
+		static std::atomic_ullong nsum;
 
 		void render(
 			int quote, int pool,
@@ -24,6 +24,6 @@ namespace attractors {
 
 //-----------------------------------------------------------------------------
 
-#endif // __clifford_h__
+#endif // __buddhabrot_h__
 
 // The End.

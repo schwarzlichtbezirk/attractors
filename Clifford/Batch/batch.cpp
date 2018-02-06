@@ -24,8 +24,6 @@ color monochrome(number h) {
 }
 
 int __cdecl wmain(int argc, wchar_t *argv[]) {
-	using namespace attractors::clifford;
-
 	// Change params only in this block
 #pragma region
 
@@ -38,22 +36,22 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	static int iters = 10000;
 	static int skip = 10;
 	static number sensitivity = 0.02;
-	std::vector<geometry> geom;
+	std::vector<clifford> geomlst;
 
 	color(*fColorFilter)(number) = color::hue;
 	number minX = -4.0, maxX = 4.0;
 
-	std::wifstream is(argc > 1 ? argv[1] : L"ca_param.txt");
+	std::wifstream is(argc > 1 ? argv[1] : L"clifford.txt");
 	if (is.fail()) {
 		std::wcout <<
 			L"no data file was opened.\n"
 			L"pass data filename as command line argument,\n"
-			L"or place \"ca_param.txt\" into current folder.\n"
+			L"or place \"clifford.txt\" into current folder.\n"
 			L"processing failed.\n";
 		return 1;
 	}
 	static wchar_t line[128];
-	is.getline(line, _countof(line), L'\n'); // Clifford attractors
+	is.getline(line, _countof(line), L'\n'); // [BOM]Clifford attractors
 	if (_wcsnicmp(line, L"Clifford attractors", 19)) {
 		std::wcout <<
 			L"file has not \"Clifford attractors\" signature.\n"
@@ -82,9 +80,9 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	is.getline(line, _countof(line));
 	is.getline(line, _countof(line)); // Gradient colors components (for filters):
 	is.getline(line, _countof(line)); // red      green     blue
-	is >> Hue1.r >> Hue1.g >> Hue1.b;
+	is >> Hue1.red >> Hue1.green >> Hue1.blue;
 	Hue1.normalize();
-	is >> Hue2.r >> Hue2.g >> Hue2.b;
+	is >> Hue2.red >> Hue2.green >> Hue2.blue;
 	Hue2.normalize();
 	is.getline(line, _countof(line));
 	is.getline(line, _countof(line)); // Horizontal Cartesian dimensions (vertical will been cast to image):
@@ -97,7 +95,7 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	is.getline(line, _countof(line)); // min(a)   max(a)    min(b)    max(b)    min(c)    max(c)    min(d)    max(d)    
 
 	while (!is.eof()) {
-		geometry g;
+		clifford g;
 		g.frames = frames;
 		g.iters = iters;
 		g.skip = skip;
@@ -114,12 +112,12 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 		g.minY = g.minX * height / width;
 		g.maxX = maxX;
 		g.maxY = g.maxX * height / width;
-		geom.push_back(g);
+		geomlst.push_back(g);
 		is.getline(line, _countof(line)); // go to next line
 	}
 	is.close();
 
-	std::wcout << L"total images: " << geom.size() << std::endl;
+	std::wcout << L"total images: " << geomlst.size() << std::endl;
 	std::wcout << L"width = " << width << L", height = " << height << L", 24 bits RGB" << std::endl;
 	std::wcout << L"color filter: " << colfilter << std::endl;
 	std::wcout << L"rendering frames for each = " << frames << std::endl;
@@ -135,7 +133,7 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	// The density plot
 	image img(width, height); // allocate space for the primary image
 
-	for (const auto& g : geom) {
+	for (const auto& g : geomlst) {
 		img.clear();
 
 		std::atomic_int percent = -pool; // skip calculation on each thread start
@@ -150,7 +148,7 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 		for (int quote = 0; quote < pool; quote++) {
 			busynum++;
 			job[quote] = std::thread([&, quote]() {
-				render(quote, pool, g, img, fColorFilter, [&]() {
+				g.render(quote, pool, img, fColorFilter, [&]() {
 					auto pct = std::chrono::high_resolution_clock::now();
 					auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(pct - pc1).count() / 1e9;
 					percent++;

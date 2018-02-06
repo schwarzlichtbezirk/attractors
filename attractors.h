@@ -1,9 +1,8 @@
-#ifndef _ATTRACTORS_
-#define _ATTRACTORS_
+#pragma once
+#ifndef __attractors_h_
+#define __attractors_h_
 
 //-----------------------------------------------------------------------------
-
-#pragma once
 
 #include <ostream>
 
@@ -24,7 +23,7 @@ namespace attractors {
 		static color monochrome(number h, const color& hue);
 		static color gradient(number h, const color& hue1, const color& hue2);
 
-		color(const number &red = 0, const number &green = 0, const number &blue = 0) : r(red), g(green), b(blue) {}
+		color(number r = 0, number g = 0, number b = 0) : red(r), green(g), blue(b) {}
 
 		inline color& operator+=(const color &rhs);
 		color operator+(const color &rhs) const;
@@ -33,7 +32,11 @@ namespace attractors {
 
 	public:
 
-		number r, g, b;
+		number red, green, blue;
+	};
+
+	struct point {
+		number x, y;
 	};
 
 	class image {
@@ -54,6 +57,7 @@ namespace attractors {
 		void update();
 
 	private:
+
 		std::vector<color> bitmap;
 	};
 
@@ -65,6 +69,6 @@ namespace attractors {
 
 //-----------------------------------------------------------------------------
 
-#endif // _ATTRACTORS_
+#endif // __attractors_h_
 
 // The End.

@@ -1,6 +1,6 @@
 ﻿#pragma once
-#ifndef _LUNA_
-#define _LUNA_
+#ifndef __luna_h__
+#define __luna_h__
 
 extern "C"
 {
@@ -512,4 +512,4 @@ private:
 
 //-----------------------------------------------------------------------------
 
-#endif // _LUNA_
+#endif // __luna_h__

@@ -20,6 +20,8 @@ cd /d "c:/attractors"
 3) Run tool with command line parameters, that can be followed:
 ```
 command line parameters usage:
+  -pool number
+      working threads pool size, default is 4 for multicore processors.
   -fn string
       output tga-image file name, default is "buddhabrot.tga".
   -nx number
@@ -32,8 +34,6 @@ command line parameters usage:
       length of sequence to test escape status (also known as bailout), default is 500.
   -tmax number
       number of iterations, multiples of 1 million, default is 50.
-  -pool number
-      working threads pool size, default is 4 for multicore processors.
 ```
 To produce image above execute `Buddhabrot.x64.exe -sq=2500 -fn buddhasingle.tga -nmax=2500 -tmax=2500`
 

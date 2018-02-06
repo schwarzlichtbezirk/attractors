@@ -22,8 +22,9 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{A74C24A5-3A4D-4A6F-A223-01E3B1AE369F}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Script</RootNamespace>
+    <RootNamespace>Attractors</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <ProjectName>script</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -74,25 +75,25 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration).$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration).$(PlatformShortName)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName).$(PlatformShortName)</TargetName>
+    <TargetName>clifford.$(ProjectName).$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration).$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration).$(PlatformShortName)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName).$(PlatformShortName)</TargetName>
+    <TargetName>clifford.$(ProjectName).$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration).$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration).$(PlatformShortName)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName).$(PlatformShortName)</TargetName>
+    <TargetName>clifford.$(ProjectName).$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration).$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration).$(PlatformShortName)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName).$(PlatformShortName)</TargetName>
+    <TargetName>clifford.$(ProjectName).$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -173,8 +174,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\attacrors.h" />
-    <ClInclude Include="..\..\attrapi.h" />
+    <ClInclude Include="..\..\attractors.h" />
+    <ClInclude Include="..\..\luaattractors.h" />
     <ClInclude Include="..\..\luastrut.h" />
     <ClInclude Include="..\..\Luna.h" />
     <ClInclude Include="..\..\stringutil.h" />
@@ -185,7 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\attractors.cpp" />
-    <ClCompile Include="..\..\attrapi.cpp" />
+    <ClCompile Include="..\..\luaattractors.cpp" />
     <ClCompile Include="..\..\stringutil.cpp" />
     <ClCompile Include="..\clifford.cpp" />
     <ClCompile Include="script.cpp" />
@@ -202,7 +203,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
+    <ResourceCompile Include="script.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\main.ico" />

@@ -22,9 +22,9 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{B9393AA0-5CD4-435A-87CC-5F2CD61EA849}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>Buddha</RootNamespace>
+    <RootNamespace>Attractors</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
-    <ProjectName>Buddhabrot</ProjectName>
+    <ProjectName>param</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -75,25 +75,25 @@
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration).$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration).$(PlatformShortName)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName).$(PlatformShortName)</TargetName>
+    <TargetName>buddhabrot.$(ProjectName).$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration).$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration).$(PlatformShortName)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName).$(PlatformShortName)</TargetName>
+    <TargetName>buddhabrot.$(ProjectName).$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration).$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration).$(PlatformShortName)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName).$(PlatformShortName)</TargetName>
+    <TargetName>buddhabrot.$(ProjectName).$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)bin\$(Configuration).$(PlatformShortName)\</OutDir>
     <IntDir>$(SolutionDir)obj\$(Configuration).$(PlatformShortName)\$(ProjectName)\</IntDir>
-    <TargetName>$(ProjectName).$(PlatformShortName)</TargetName>
+    <TargetName>buddhabrot.$(ProjectName).$(PlatformShortName)</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -106,6 +106,7 @@
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalIncludeDirectories>$(SolutionDir)lua/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -124,6 +125,7 @@
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <CallingConvention>FastCall</CallingConvention>
+      <AdditionalIncludeDirectories>$(SolutionDir)lua/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,6 +146,7 @@
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <CallingConvention>FastCall</CallingConvention>
+      <AdditionalIncludeDirectories>$(SolutionDir)lua/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -164,6 +167,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
+      <AdditionalIncludeDirectories>$(SolutionDir)lua/src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -173,14 +177,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\attacrors.h" />
+    <ClInclude Include="..\attractors.h" />
+    <ClInclude Include="..\luaattractors.h" />
+    <ClInclude Include="..\stringutil.h" />
+    <ClInclude Include="buddhabrot.h" />
+    <ClInclude Include="luabuddhabrot.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\attractors.cpp" />
-    <ClCompile Include="Buddhabrot.cpp" />
+    <ClCompile Include="..\luaattractors.cpp" />
+    <ClCompile Include="..\stringutil.cpp" />
+    <ClCompile Include="buddhabrot.cpp" />
+    <ClCompile Include="luabuddhabrot.cpp" />
+    <ClCompile Include="param.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -189,10 +201,15 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
+    <ResourceCompile Include="param.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="main.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lua\lua.vcxproj">
+      <Project>{c50e98a6-eb7f-4b44-8fdc-657c6973e40c}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

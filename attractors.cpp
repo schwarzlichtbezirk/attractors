@@ -63,19 +63,19 @@ color color::gradient(number h, const color& hue1, const color& hue2) {
 	int hi = static_cast<int>(h);
 	number hf = h - hi;
 	number df = 1. - h;
-	return color(hue1.r*hf + hue2.r*df, hue1.g*hf + hue2.g*df, hue1.b*hf + hue2.b*df);
+	return color(hue1.red*hf + hue2.red*df, hue1.green*hf + hue2.green*df, hue1.blue*hf + hue2.blue*df);
 }
 
 color color::monochrome(number h, const color& hue) {
 	h *= 6.0;
 	number hf = h - static_cast<int>(h);
-	return color(hf*hue.r, hf*hue.g, hf*hue.b);
+	return color(hf*hue.red, hf*hue.green, hf*hue.blue);
 }
 
 color& color::operator+=(const color &rhs) {
-	r += rhs.r;
-	g += rhs.g;
-	b += rhs.b;
+	red += rhs.red;
+	green += rhs.green;
+	blue += rhs.blue;
 	return *this;
 }
 
@@ -84,9 +84,9 @@ color color::operator+(const color &rhs) const {
 }
 
 void color::normalize() {
-	number m = std::max<number>(r, std::max<number>(g, b));
-	if (m > 0) r /= m, g /= m, b /= m;
-	else r = g = b = 1.0;
+	number m = std::max<number>(red, std::max<number>(green, blue));
+	if (m > 0) red /= m, green /= m, blue /= m;
+	else red = green = blue = 1.0;
 }
 
 /////////////////
@@ -113,9 +113,9 @@ void image::writetga(const wchar_t* filename, number sensitivity) {
 
 	// Raw uncompressed bytes
 	for (const auto& c : bitmap) {
-		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.b)) * 255.0));
-		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.g)) * 255.0));
-		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.r)) * 255.0));
+		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.blue)) * 255.0));
+		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.green)) * 255.0));
+		os.put(static_cast<byte>((1.0 - exp(-sensitivity * c.red)) * 255.0));
 	}
 
 	tgafooter(os);

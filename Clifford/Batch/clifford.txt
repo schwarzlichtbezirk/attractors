@@ -1,4 +1,4 @@
-Clifford Attractors
+﻿Clifford Attractors
 Threads pool size:
 4
 Number of first image and filename mask:

@@ -13,10 +13,9 @@
 // Threads pool default size
 #define POOL 4
 
-int __cdecl wmain(void) {
-	using namespace attractors;
-	using namespace attractors::clifford;
+using namespace attractors;
 
+int __cdecl wmain(void) {
 	// Change params only in this block
 #pragma region
 
@@ -25,7 +24,7 @@ int __cdecl wmain(void) {
 	static int width = 1600;
 	static int height = 1200;
 	static number sensitivity = 0.02;
-	static geometry g;
+	static clifford g;
 
 	g.frames = 10000;
 	g.iters = 10000;
@@ -78,7 +77,7 @@ int __cdecl wmain(void) {
 	for (int quote = 0; quote < pool; quote++) {
 		busynum++;
 		job[quote] = std::thread([&, quote]() {
-			render(quote, pool, g, img, color::hue, [&]() {
+			g.render(quote, pool, img, color::hue, [&]() {
 				auto pct = std::chrono::high_resolution_clock::now();
 				auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(pct - pc1).count() / 1e9;
 				percent++;
