@@ -5,9 +5,8 @@
 
 #include "stdafx.h"
 
-#include "../../stringutil.h"
-#include "../../attractors.h"
-#include "../clifford.h"
+#include "../attractors.h"
+#include "clifford.h"
 
 int main() {
 	return 0;

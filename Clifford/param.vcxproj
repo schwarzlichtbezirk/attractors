@@ -173,15 +173,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\attractors.h" />
-    <ClInclude Include="..\clifford.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="..\attractors.h" />
+    <ClInclude Include="clifford.h" />
+    <ClInclude Include="param.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\attractors.cpp" />
-    <ClCompile Include="..\clifford.cpp" />
+    <ClCompile Include="..\attractors.cpp" />
+    <ClCompile Include="clifford.cpp" />
     <ClCompile Include="param.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -194,7 +194,7 @@
     <ResourceCompile Include="param.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\main.ico" />
+    <Image Include="main.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

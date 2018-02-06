@@ -7,8 +7,8 @@
 
 #include <conio.h>
 
-#include "../../attractors.h"
-#include "../clifford.h"
+#include "../attractors.h"
+#include "clifford.h"
 
 // Threads pool default size
 #define POOL 4
