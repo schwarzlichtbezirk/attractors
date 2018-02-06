@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "../luaattractors.h"
-#include "luabuddhabrot.h"
+#include "../attractors.h"
+#include "buddhabrot.h"
 
 /*
    Crude, but functional, little program to calculate the
@@ -147,42 +147,6 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	if (!pool) {
 		pool = std::thread::hardware_concurrency() > 2 ? POOL : 1;
 	}
-
-	// Inits Lua virtual machine
-	auto L = luaL_newstate();
-	_ASSERT(L);
-	luaL_openlibs(L);
-
-	// insert "DevMode" indicator
-	lua_pushboolean(L,
-#ifdef _DEBUG
-		true);
-#else
-		false);
-#endif
-	lua_setglobal(L, "devmode");
-	// insert "Platform" string
-	lua_pushstring(L,
-#if defined(_M_IX86)
-		"x86");
-#elif defined(_M_AMD64)
-		"amd64");
-#elif defined(_M_IA64)
-		"ia64");
-#elif defined(_M_ARM)
-		"arm");
-#else
-		"*");
-#endif
-	lua_setglobal(L, "platform");
-	// insert "PtrSize" value
-	lua_pushinteger(L, sizeof(size_t) * 8);
-	lua_setglobal(L, "ptrsize");
-
-	// register Lua data
-	luacolor::Luna::Register(L);
-	luaimage::Luna::Register(L);
-	luabuddhabrot::Luna::Register(L);
 
 	// The density plot
 	image img(nx, ny);

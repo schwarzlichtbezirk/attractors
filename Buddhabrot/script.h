@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by param.rc
+// Used by script.rc
 //
 #define IDI_MAIN                        100
 

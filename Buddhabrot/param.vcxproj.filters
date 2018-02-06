@@ -27,16 +27,7 @@
     <ClInclude Include="buddhabrot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="luabuddhabrot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\luaattractors.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\attractors.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\stringutil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -48,15 +39,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="buddhabrot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="luabuddhabrot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\luaattractors.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\stringutil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="param.cpp">
