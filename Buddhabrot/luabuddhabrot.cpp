@@ -59,38 +59,11 @@ LUNA_GETTEREX(luabuddhabrot, frames) {
 LUNA_DECLEX(luabuddhabrot, render) {
 	int pool = (int)luaL_checkinteger(L, 1);
 	auto img = luaimage::Luna::check(L, 2);
+	int opt = luaL_checkoption(L, 3, "rainbow", luacolor::colfltopt);
 
-	std::atomic_int percent = -pool; // skip calculation on each thread start
-	std::atomic_int busynum = 0;
-	std::mutex mtxcout;
-	std::vector<std::thread> job(pool);
-	std::mutex mtxpool;
-	std::condition_variable cv;
+	number dur = rendermt(pool, *img, luacolor::colflttbl[opt], true);
 
-	auto pc1 = std::chrono::high_resolution_clock::now();
-	for (int quote = 0; quote < pool; quote++) {
-		busynum++;
-		job[quote] = std::thread([&, quote]() {
-			render(quote, pool, *img, color::rainbow, [&]() {
-				auto pct = std::chrono::high_resolution_clock::now();
-				auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(pct - pc1).count() / 1e9;
-				percent++;
-				mtxcout.lock(); // exclusive access to std::wcout
-				std::wcout << L"\r" << percent << L"%, remains " << (percent > 0 ? (int)(dur * (100 - percent) / percent) : 0) << L"s   ";
-				mtxcout.unlock();
-			});
-			busynum--;
-			cv.notify_one();
-		});
-	}
-	std::unique_lock<std::mutex> lck(mtxpool);
-	cv.wait(lck, [&]()->bool { return busynum == 0; });
-	for (auto& th : job) {
-		th.join();
-	}
-	auto pc2 = std::chrono::high_resolution_clock::now();
-
-	lua_pushnumber(L, std::chrono::duration_cast<std::chrono::nanoseconds>(pc2 - pc1).count() / 1e9);
+	lua_pushnumber(L, dur);
 	lua_pushinteger(L, nsum);
 	lua_pushinteger(L, numdiscard);
 	return 3;

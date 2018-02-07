@@ -5,19 +5,24 @@
 ## Installation ##
 
 First, install [Visual Studio 2017](https://www.visualstudio.com/downloads/). Open in Visual Studio "attractors.sln", and compile solution.
-No system dependencies used, STL only based C++11 code. So, others compilators also can be used to build programs.
+No Windows-specified system dependencies used, STL-only based C++11 code. So, others compilators also can be used to build programs.
+
+## Usage steps ##
+
+1) Compile selected tool.
+2) Set current directory to destination, where must be placed auxiliary files and will be written result TGA-images.
+For example, execute at console followed commands:
+```batch
+mkdir "c:/attractors"
+cd /d "c:/attractors"
+```
+3) Run tool with command line descripted bellow parameters.
 
 ## Buddhabrot ##
 
 <a href="http://images.sevstar.net/images/22946534505656593756.jpg" target="_blank"><img src="http://images.sevstar.net/images/22946534505656593756_thumb.png" border="0" alt="Buddhabrot"/></a>  
 
-1) Compile this tool.
-2) Set current directory to destination, where must be placed result TGA-image. For example, execute at console followed commands:
-```batch
-mkdir "c:/attractors"
-cd /d "c:/attractors"
-```
-3) Run tool with command line parameters, that can be followed:
+There 2 tools: managed by command line parameters, and managed by script. Command line parameters for first case can be followed:
 ```
 command line parameters usage:
   -pool number
@@ -35,7 +40,8 @@ command line parameters usage:
   -tmax number
       number of iterations, multiples of 1 million, default is 50.
 ```
-To produce image above execute `Buddhabrot.x64.exe -sq=2500 -fn buddhasingle.tga -nmax=2500 -tmax=2500`
+To produce image above execute `buddhabrot.param.x64.exe -sq=2500 -fn buddhasingle.tga -nmax=2500 -tmax=2500`
+To run second tool be sure that `buddhabrot.lua` script is placed to current directory, or put script to command line.
 
 ## Clifford attractors ##
 
@@ -44,11 +50,14 @@ To produce image above execute `Buddhabrot.x64.exe -sq=2500 -fn buddhasingle.tga
 <a href="http://images.sevstar.net/images/96240766713180008594.jpg" target="_blank"><img src="http://images.sevstar.net/images/96240766713180008594_thumb.png" alt="Clifford #3" /></a>
 <a href="http://images.sevstar.net/images/67101706209135196956.jpg" target="_blank"><img src="http://images.sevstar.net/images/67101706209135196956_thumb.png" alt="Clifford #4" /></a>
 
-There 2 tools for images rendering: batch-mode tool and param-mode tool. Compile them at first, and set current directory as for Buddhabrot.
-Param-mode tool lets place individual parameters at command prompt for each rendering.
-Batch-mode tool takes the file `ca_param.txt` with configuration, that includes image parameters and geometry description.
+There 3 tools for images rendering: dialog-mode tool, batch-mode tool and tool managed by script.
+Compile them at first, and set current directory as for Buddhabrot.
+Dialog-mode tool lets place individual parameters at command prompt for each rendering.
+Batch-mode tool takes the file `cliford.txt` with configuration, that includes image parameters and geometry description.
 Preset provided with sources makes images as above. Play with those parameters to get different rendering results.
 You can make as much images as you like by one tool call.
+Tool managed by script takes `cliford.lua` or script placed on command line parameter and execute it.
+This tool provides best possibility to automate rendering.
 
 ## License
 

@@ -13,7 +13,7 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Script">
+    <Filter Include="Scripts">
       <UniqueIdentifier>{a0b4a544-f133-4728-a0b6-85b65304eb68}</UniqueIdentifier>
       <Extensions>lua</Extensions>
     </Filter>
@@ -75,7 +75,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="buddhabrot.lua">
-      <Filter>Script</Filter>
+      <Filter>Scripts</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

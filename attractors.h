@@ -13,11 +13,11 @@ namespace attractors {
 	typedef unsigned __int32 uint;
 	typedef unsigned __int64 huge;
 	typedef double number;
-	typedef unsigned __int16 planecolor;
 
 	class color {
 	public:
 
+		typedef color(*filter)(number);
 		static color hue(number h);
 		static color rainbow(number h);
 		static color monochrome(number h, const color& hue);
@@ -52,6 +52,10 @@ namespace attractors {
 
 		int nx, ny;
 
+		// TGA saving
+		static void tgaheader(std::ostream& os, int wdh, int hgt, const char* id = "");
+		static void tgafooter(std::ostream& os);
+
 	protected:
 
 		void update();
@@ -61,9 +65,18 @@ namespace attractors {
 		std::vector<color> bitmap;
 	};
 
-	// TGA saving
-	void tgaheader(std::ostream& os, int wdh, int hgt, const char* id = "");
-	void tgafooter(std::ostream& os);
+	// geometry render interface
+	struct geometry {
+		virtual void render(
+			int quote, int pool,
+			image& img, // plotting image
+			color::filter hue, // Hue color generator
+			std::function<void()> notify // notify called with each per cent comlete
+		) const = 0;
+
+		// multithreaded render, returns duration in seconds
+		number rendermt(int pool, image& img, color::filter hue, bool notify = true) const;
+	};
 
 }
 

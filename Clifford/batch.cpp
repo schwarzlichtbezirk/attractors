@@ -52,7 +52,7 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	}
 	static wchar_t line[128];
 	is.getline(line, _countof(line), L'\n'); // [BOM]Clifford attractors
-	if (_wcsnicmp(line, L"Clifford attractors", 19)) {
+	if (_wcsnicmp(line, L"Clifford attractors", 19) && _wcsnicmp(line+3, L"Clifford attractors", 19)) {
 		std::wcout <<
 			L"file has not \"Clifford attractors\" signature.\n"
 			L"processing failed.\n";

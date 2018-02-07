@@ -8,7 +8,7 @@ using namespace attractors;
 void clifford::render(
 	int quote, int pool,
 	image& img,
-	color(*hue)(number),
+	color::filter hue,
 	std::function<void()> notify) const {
 
 	color* bmp = img.data();

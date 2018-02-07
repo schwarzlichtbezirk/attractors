@@ -31,7 +31,7 @@ static int pool = 0; // setup it later
 const wchar_t* filename = L"buddhabrot.tga";
 static int nx = NX, ny = NY;
 static number sensitivity = 0.02;
-static buddhabrot g = { NMAX, TMAX };
+static buddhabrot g;
 
 struct {
 	const wchar_t* id;
@@ -100,6 +100,7 @@ void cmdlinehelp() {
 }
 
 int __cdecl wmain(int argc, wchar_t *argv[]) {
+	g.nmax = NMAX, g.tmax = TMAX;
 	// process command line parameters
 	for (int param = 1; param < argc; param++) {
 		auto arg = argv[param];
@@ -153,37 +154,8 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	img.clear();
 
 	int frames = 1000000 * g.tmax;
-
-	std::atomic_int percent = -pool; // skip calculation on each thread start
-	std::atomic_int busynum = 0;
-	std::mutex mtxcout;
-	std::vector<std::thread> job(pool);
-	std::mutex mtxpool;
-	std::condition_variable cv;
-
-	auto pc1 = std::chrono::high_resolution_clock::now();
-	for (int quote = 0; quote < pool; quote++) {
-		busynum++;
-		job[quote] = std::thread([&, quote]() {
-			g.render(quote, pool, img, color::rainbow, [&]() {
-				auto pct = std::chrono::high_resolution_clock::now();
-				auto dur = std::chrono::duration_cast<std::chrono::nanoseconds>(pct - pc1).count() / 1e9;
-				percent++;
-				mtxcout.lock(); // exclusive access to std::wcout
-				std::wcout << L"\r" << percent << L"%, remains " << (percent > 0 ? (int)(dur * (100 - percent) / percent) : 0) << L"s   ";
-				mtxcout.unlock();
-			});
-			busynum--;
-			cv.notify_one();
-		});
-	}
-	std::unique_lock<std::mutex> lck(mtxpool);
-	cv.wait(lck, [&]()->bool { return busynum == 0; });
-	for (auto& th : job) {
-		th.join();
-	}
-	auto pc2 = std::chrono::high_resolution_clock::now();
-	std::wcout << L"\r" << std::chrono::duration_cast<std::chrono::nanoseconds>(pc2 - pc1).count() / 1e9 << L"s            " << std::endl;
+	number dur = g.rendermt(pool, img, color::rainbow, true);
+	std::wcout << L"\r" << dur << L"s            " << std::endl;
 	std::wcout << L"discard points: " << (100. * buddhabrot::numdiscard / frames) << L"%" << std::endl;
 	std::wcout << L"average bailout: " << ((double)buddhabrot::nsum / (frames - buddhabrot::numdiscard)) << std::endl;
 	std::wcout << L"total iterations: " << (buddhabrot::nsum / 1e6) << L"M" << std::endl;

@@ -9,6 +9,32 @@ using namespace attractors;
 
 //-----------------------------------------------------------------------------
 
+static luacolor::color hue1(0.8, 0.25, 1.0), hue2(0.25, 1.0, 0.0);
+
+color luacolor::monochrome(number h) {
+	return color::monochrome(h, hue1);
+}
+
+color luacolor::gradient(number h) {
+	return color::gradient(h, hue1, hue2);
+}
+
+const char* luacolor::colfltopt[] = {
+	"hue",
+	"rainbow",
+	"mono",
+	"gradient",
+	nullptr
+};
+
+color::filter luacolor::colflttbl[] = {
+	color::hue,
+	color::rainbow,
+	luacolor::monochrome,
+	luacolor::gradient,
+	nullptr
+};
+
 template luacolor::Luna;
 const char luacolor::classname[] = "color";
 const luacolor::PropertyType luacolor::properties[] = {
@@ -21,6 +47,7 @@ const luacolor::PropertyType luacolor::properties[] = {
 const luacolor::FunctionType luacolor::methods[] = {
 	LUNA_FUNC(__add),
 	LUNA_FUNC(create),
+	LUNA_FUNC(setpair),
 	LUNA_FUNC(hue),
 	LUNA_FUNC(rainbow),
 	LUNA_FUNC(monochrome),
@@ -57,6 +84,14 @@ LUNA_DECLEX(luacolor, create) {
 	return 1;
 }
 
+LUNA_DECLEX(luacolor, setpair) {
+	auto op1 = luacolor::Luna::check(L, 1);
+	auto op2 = luacolor::Luna::check(L, 2);
+
+	hue1 = *op1, hue2 = *op2;
+	return 0;
+}
+
 LUNA_DECLEX(luacolor, hue) {
 	auto h = luaL_checknumber(L, 1);
 
@@ -75,7 +110,7 @@ LUNA_DECLEX(luacolor, monochrome) {
 	auto h = luaL_checknumber(L, 1);
 	auto op1 = luacolor::Luna::check(L, 2);
 
-	luacolor::Luna::push(L, monochrome(h, *op1));
+	luacolor::Luna::push(L, color::monochrome(h, *op1));
 	return 1;
 }
 
@@ -84,7 +119,7 @@ LUNA_DECLEX(luacolor, gradient) {
 	auto op1 = luacolor::Luna::check(L, 2);
 	auto op2 = luacolor::Luna::check(L, 3);
 
-	luacolor::Luna::push(L, gradient(h, *op1, *op2));
+	luacolor::Luna::push(L, color::gradient(h, *op1, *op2));
 	return 1;
 }
 

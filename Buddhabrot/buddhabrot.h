@@ -7,7 +7,7 @@
 #include "../attractors.h"
 
 namespace attractors {
-	struct buddhabrot {
+	struct buddhabrot : public geometry {
 		int nmax, tmax;
 
 		static std::atomic_ulong numdiscard;
@@ -16,9 +16,9 @@ namespace attractors {
 		void render(
 			int quote, int pool,
 			image& img, // plotting image
-			color(*hue)(number), // Hue color generator
+			color::filter hue, // Hue color generator
 			std::function<void()> notify // notify called with each per cent comlete
-		) const;
+		) const override;
 	};
 }
 

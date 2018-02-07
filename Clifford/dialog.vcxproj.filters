@@ -27,7 +27,7 @@
     <ClInclude Include="clifford.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="param.h">
+    <ClInclude Include="dialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -35,7 +35,7 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="param.cpp">
+    <ClCompile Include="dialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="clifford.cpp">
@@ -46,7 +46,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="param.rc">
+    <ResourceCompile Include="dialog.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

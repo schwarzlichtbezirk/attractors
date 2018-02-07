@@ -17,10 +17,17 @@ namespace attractors {
 		luacolor(color&& v) noexcept : color(std::move(v)) {}
 		luacolor(number r, number g, number b);
 
+		static color monochrome(number h);
+		static color gradient(number h);
+
+		static const char* colfltopt[];
+		static filter colflttbl[];
+
 	protected:
 
 		static LUNA_DECL(__add);
 		static LUNA_DECL(create);
+		static LUNA_DECL(setpair);
 		static LUNA_DECL(hue);
 		static LUNA_DECL(rainbow);
 		static LUNA_DECL(monochrome);

@@ -11,7 +11,7 @@ std::atomic_ullong buddhabrot::nsum = 0;
 void buddhabrot::render(
 	int quote, int pool,
 	image& img,
-	color(*hue)(number),
+	color::filter hue,
 	std::function<void()> notify) const {
 
 	numdiscard = 0;

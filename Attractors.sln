@@ -18,7 +18,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "script", "Buddhabrot\script
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CliffordAttractors", "CliffordAttractors", "{0A7CD58A-E818-4ED6-8C1C-0F37FE4FF18C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "param", "Clifford\param.vcxproj", "{9059912F-731E-413F-AA4A-405FC5FB6D06}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dialog", "Clifford\dialog.vcxproj", "{9059912F-731E-413F-AA4A-405FC5FB6D06}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "batch", "Clifford\batch.vcxproj", "{1945880C-0FF3-4420-9E50-29412926611D}"
 EndProject
