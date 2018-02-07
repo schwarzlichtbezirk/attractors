@@ -18,7 +18,7 @@ void buddhabrot::render(
 	nsum = 0;
 
 	int i, j, n, ix, iy;
-	double x, y, x0, y0, xnew, ynew;
+	number x, y, x0, y0, xnew, ynew;
 
 	// Coordinates sequence
 	std::vector<point> xyseq(nmax);
@@ -31,13 +31,13 @@ void buddhabrot::render(
 
 	std::vector<color> ct(nmax);
 	color* ctp = ct.data();
-	for (int i = 0; i < ct.size(); i++) {
-		ctp[i] = hue((double)i / nmax);
+	for (size_t i = 0; i < ct.size(); i++) {
+		ctp[i] = hue((number)i / nmax);
 	}
 
 	// Make unique random sequence
 	std::mt19937_64 prng(std::chrono::high_resolution_clock::now().time_since_epoch().count() + quote);
-	std::uniform_real_distribution<double> distribution(0.0, 1.0);
+	std::uniform_real_distribution<number> distribution(0.0, 1.0);
 
 	// Iterate
 	int i1 = quote * frames / pool, i2 = (quote + 1) * frames / pool;

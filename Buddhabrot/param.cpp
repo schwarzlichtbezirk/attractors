@@ -157,7 +157,7 @@ int __cdecl wmain(int argc, wchar_t *argv[]) {
 	number dur = g.rendermt(pool, img, color::rainbow, true);
 	std::wcout << L"\r" << dur << L"s            " << std::endl;
 	std::wcout << L"discard points: " << (100. * buddhabrot::numdiscard / frames) << L"%" << std::endl;
-	std::wcout << L"average bailout: " << ((double)buddhabrot::nsum / (frames - buddhabrot::numdiscard)) << std::endl;
+	std::wcout << L"average bailout: " << ((number)buddhabrot::nsum / (frames - buddhabrot::numdiscard)) << std::endl;
 	std::wcout << L"total iterations: " << (buddhabrot::nsum / 1e6) << L"M" << std::endl;
 
 	// Save image

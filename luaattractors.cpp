@@ -234,7 +234,7 @@ LUNA_DECLEX(luaimage, clear) {
 
 LUNA_DECLEX(luaimage, writetga) {
 	auto filename = luaL_checkwstr(L, 1);
-	auto sensitivity = (double)luaL_optnumber(L, 2, 0.02);
+	auto sensitivity = (number)luaL_optnumber(L, 2, 0.02);
 	writetga(filename.c_str(), sensitivity);
 	return 0;
 }
