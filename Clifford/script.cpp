@@ -40,18 +40,20 @@ int __cdecl main(int argc, char* argv[]) {
 	lua_pushstring(L,
 #if defined(_M_IX86)
 		"x86");
-#elif defined(_M_AMD64)
-		"amd64");
-#elif defined(_M_IA64)
-		"ia64");
+#elif defined(_M_X64)
+		"x64");
 #elif defined(_M_ARM)
 		"arm");
+#elif defined(_M_ARM64)
+		"arm64");
+#elif defined(_M_IA64)
+		"ia64");
 #else
 		"*");
 #endif
 	lua_setglobal(L, "platform");
 	// insert "PtrSize" value
-	lua_pushinteger(L, sizeof(size_t) * 8);
+	lua_pushinteger(L, sizeof(size_t));
 	lua_setglobal(L, "ptrsize");
 
 	createargtable(L, argc, argv);

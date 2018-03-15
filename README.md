@@ -20,7 +20,7 @@ cd /d "c:/attractors"
 
 ## Buddhabrot ##
 
-<a href="http://images.sevstar.net/images/22946534505656593756.jpg" target="_blank"><img src="http://images.sevstar.net/images/22946534505656593756_thumb.png" border="0" alt="Buddhabrot"/></a>  
+[![buddhabrot](http://images.sevstar.net/images/22946534505656593756_thumb.png)](http://images.sevstar.net/images/22946534505656593756.jpg)
 
 There 2 tools: managed by command line parameters, and managed by script. Command line parameters for first case can be followed:
 ```
@@ -45,10 +45,10 @@ To run second tool be sure that `buddhabrot.lua` script is placed to current dir
 
 ## Clifford attractors ##
 
-<a href="http://images.sevstar.net/images/17209669908976374767.jpg" target="_blank"><img src="http://images.sevstar.net/images/17209669908976374767_thumb.png" alt="Clifford #1" /></a>
-<a href="http://images.sevstar.net/images/15444013609743366105.jpg" target="_blank"><img src="http://images.sevstar.net/images/15444013609743366105_thumb.png" alt="Clifford #2" /></a>
-<a href="http://images.sevstar.net/images/96240766713180008594.jpg" target="_blank"><img src="http://images.sevstar.net/images/96240766713180008594_thumb.png" alt="Clifford #3" /></a>
-<a href="http://images.sevstar.net/images/67101706209135196956.jpg" target="_blank"><img src="http://images.sevstar.net/images/67101706209135196956_thumb.png" alt="Clifford #4" /></a>
+[![clifford #1](http://images.sevstar.net/images/17209669908976374767_thumb.png)](http://images.sevstar.net/images/17209669908976374767.jpg)
+[![clifford #2](http://images.sevstar.net/images/15444013609743366105_thumb.png)](http://images.sevstar.net/images/15444013609743366105.jpg)
+[![clifford #3](http://images.sevstar.net/images/96240766713180008594_thumb.png)](http://images.sevstar.net/images/96240766713180008594.jpg)
+[![clifford #4](http://images.sevstar.net/images/67101706209135196956_thumb.png)](http://images.sevstar.net/images/67101706209135196956.jpg)
 
 There 3 tools for images rendering: dialog-mode tool, batch-mode tool and tool managed by script.
 Compile them at first, and set current directory as for Buddhabrot.

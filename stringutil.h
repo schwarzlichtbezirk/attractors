@@ -24,7 +24,7 @@ void correctfilename(std::basic_string<T>& str) {
 std::string wchar_to_utf8(const wchar_t* in, size_t len);
 std::wstring utf8_to_wchar(const char* in, size_t len);
 inline std::string wchar_to_utf8(const std::wstring& in) { return wchar_to_utf8(in.data(), in.size()); }
-inline std::wstring utf8_to_wchar(const std::string in) { return utf8_to_wchar(in.data(), in.size()); }
+inline std::wstring utf8_to_wchar(const std::string& in) { return utf8_to_wchar(in.data(), in.size()); }
 
 //-----------------------------------------------------------------------------
 

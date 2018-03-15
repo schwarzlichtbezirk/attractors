@@ -2,12 +2,7 @@
 #ifndef __luna_h__
 #define __luna_h__
 
-extern "C"
-{
-#include <lua.h>
-#include <lualib.h>
-#include <lauxlib.h>
-}
+#include "lua.hpp"
 
 //-----------------------------------------------------------------------------
 
@@ -142,7 +137,7 @@ public:
 				ud->object->tostring(L);
 			}
 			__if_not_exists(T::tostring) {
-				lua_pushfstring(L, "%s (%p)", T::classname, ud->object);
+				lua_pushfstring(L, "%s (%p)", T::classname, ud->object.get());
 			}
 		} else {
 			lua_pushliteral(L, "empty object");
@@ -384,6 +379,13 @@ public:
 		auto ptr2 = opt(L, 2);
 		lua_pushboolean(L, ptr1 && ptr2 && *ptr1 == *ptr2);
 		return 1;
+	}
+
+	static void push(lua_State* L, const T& instance) {
+		T* ud = static_cast<T*>(lua_newuserdata(L, sizeof(T)));
+		new (ud) T(instance);
+		luaL_getmetatable(L, T::classname); // lookup metatable in Lua registry
+		lua_setmetatable(L, -2);
 	}
 
 	static void push(lua_State* L, const T&& instance) {
