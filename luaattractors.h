@@ -66,6 +66,31 @@ namespace attractors {
 		LUNA_DECL(writetga);
 	};
 
+	lua_State* open_lvm();
+	void createargtable(lua_State *L, int argc, char* argv[]);
+	int doscript(lua_State *L, const char* script);
+
+	template<class geometry>
+	int luamain(int argc, char* argv[], const char* script) {
+		// Open Lua virtual machine
+		auto L = open_lvm();
+		createargtable(L, argc, argv);
+
+		// Register Lua data
+		luacolor::Luna::Register(L);
+		luaimage::Luna::Register(L);
+		geometry::Luna::Register(L);
+
+		// Perform the job
+		int retval = doscript(L, argc > 1 ? argv[1] : script);
+
+		// Close Lua virtual machine
+		lua_close(L);
+		L = nullptr;
+
+		return retval;
+	}
+
 }
 
 // The End.

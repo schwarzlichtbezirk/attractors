@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Resource.rc
+// Used by batch.rc
 //
 #define IDI_MAIN                        100
 

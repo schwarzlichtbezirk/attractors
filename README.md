@@ -59,6 +59,12 @@ You can make as much images as you like by one tool call.
 Tool managed by script takes `cliford.lua` or script placed on command line parameter and execute it.
 This tool provides best possibility to automate rendering.
 
+## Popcorn ##
+
+[![popcorn](http://images.sevstar.net/images/14156613425799654524_thumb.png)](http://images.sevstar.net/images/14156613425799654524.jpg)
+
+Tool managed by `popcorn.lua` helps to build this kind of attractor.
+
 ## License
 
 Author: &copy; schwarzlichtbezirk (schwarzlichtbezirk@gmail.com)  
